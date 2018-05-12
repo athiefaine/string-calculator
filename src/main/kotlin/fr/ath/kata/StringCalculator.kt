@@ -5,17 +5,31 @@ class StringCalculator {
         private const val CUSTOM_SEPARATOR_HEADER_PREFIX = "//"
         private const val DEFAULT_SEPARATOR = ","
 
-        fun add(numbers: String): Int {
-            val separators = getSeparators(numbers)
+        fun add(expression: String): Int {
+            val separators = getSeparators(expression)
+
+            val numbers = getNumbers(expression, separators)
+
+            handleNegativeNumbers(numbers)
 
             return compute(numbers, separators)
         }
 
-        private fun compute(numbers: String, separators: MutableList<String>): Int {
+        private fun compute(numbers: Collection<Int>, separators: MutableList<String>): Int {
+            return numbers.sum()
+        }
+
+        private fun getNumbers(numbers: String, separators: MutableList<String>): List<Int> {
             return getNumbersBody(numbers)
                     .split(*separators.toTypedArray())
                     .map { if (it.isEmpty()) 0 else it.toInt() }
-                    .sum()
+        }
+
+        private fun handleNegativeNumbers(numbers: Collection<Int>): Unit {
+            val negativeNumbers = numbers.filter { n -> n < 0 }
+            if (negativeNumbers.isNotEmpty()) {
+                throw RuntimeException("negatives not allowed: $negativeNumbers")
+            }
         }
 
         private fun getSeparators(numbers: String): MutableList<String> {
