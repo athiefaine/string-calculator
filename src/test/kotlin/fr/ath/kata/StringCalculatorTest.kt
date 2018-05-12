@@ -20,4 +20,14 @@ class StringCalculatorTest {
     fun should_return_same_number_when_given_a_single_number_other() {
         assert(StringCalculator.add("42")).isEqualTo(42)
     }
+
+    @Test
+    fun should_return_sum_when_given_two_comma_separated_numbers() {
+        assert(StringCalculator.add("1,2")).isEqualTo(3)
+    }
+
+    @Test
+    fun should_return_sum_when_given_two_comma_separated_numbers_other() {
+        assert(StringCalculator.add("52,4")).isEqualTo(56)
+    }
 }

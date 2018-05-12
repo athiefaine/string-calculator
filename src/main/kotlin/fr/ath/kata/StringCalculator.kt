@@ -3,10 +3,10 @@ package fr.ath.kata
 class StringCalculator {
     companion object {
         fun add(numbers: String): Int {
-            if (numbers.isEmpty()) {
-                return 0
-            }
-            return numbers.toInt()
+            return numbers
+                    .split(",")
+                    .map { if (it.isEmpty()) 0 else it.toInt() }
+                    .sum()
         }
 
     }
