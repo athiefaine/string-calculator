@@ -1,0 +1,65 @@
+
+
+buildscript {
+    ext.kotlin_version = '1.2.30'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath ("org.junit.platform:junit-platform-gradle-plugin:1.0.0-RC2")
+    }
+}
+
+plugins {
+    id 'com.adarshr.test-logger' version '1.1.2'
+    id 'org.springframework.boot' version '2.0.0.RELEASE'
+}
+
+
+group 'fr.ath.kata'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'kotlin'
+apply plugin: 'org.junit.platform.gradle.plugin'
+apply plugin: 'io.spring.dependency-management'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+
+    //testCompile "org.jetbrains.kotlin:kotlin-test-annotations-common:$kotlin_version"
+    testCompile 'org.junit.platform:junit-platform-runner:1.0.0-RC2'
+    testCompile "org.jetbrains.kotlin:kotlin-test-common:$kotlin_version"
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:5.0.0"
+    testCompile "org.junit.jupiter:junit-jupiter-api:5.0.0"
+    testCompile "org.junit.jupiter:junit-jupiter-params:5.0.0"
+    //  testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    // testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testCompile 'org.assertj:assertj-core:3.9.0'
+    testCompile 'com.willowtreeapps.assertk:assertk:0.9'
+
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+testlogger {
+    theme 'mocha'
+}
+junitPlatform {
+    details 'tree'
+}
+
+
