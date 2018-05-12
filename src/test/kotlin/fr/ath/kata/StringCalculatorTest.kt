@@ -27,7 +27,7 @@ class StringCalculatorTest {
     }
 
     @Test
-    fun should_return_sum_when_given_two_comma_separated_numbers_other() {
-        assert(StringCalculator.add("52,4")).isEqualTo(56)
+    fun should_return_sum_when_given_any_amount_of_numbers() {
+        assert(StringCalculator.add("1,2,3,4")).isEqualTo(10)
     }
 }
