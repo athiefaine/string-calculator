@@ -35,4 +35,8 @@ class StringCalculatorTest {
     fun should_return_sum_when_given_any_amount_of_comma_or_newline_separated_numbers() {
         assert(StringCalculator.add("1\n2,3")).isEqualTo(6)
     }
+    @Test
+    fun should_return_sum_when_given_any_amount_of_comma_or_newline_or_custom_separated_numbers() {
+        assert(StringCalculator.add("//;\n1;2")).isEqualTo(3)
+    }
 }
