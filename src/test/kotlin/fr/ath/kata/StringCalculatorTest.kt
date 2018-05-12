@@ -2,13 +2,9 @@ package fr.ath.kata;
 
 import assertk.assert
 import assertk.assertions.isEqualTo
-import io.kotlintest.be
-import io.kotlintest.should
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import org.junit.Test
-import kotlin.test.assertFails
-import kotlin.test.assertFailsWith
 
 class StringCalculatorTest {
 
@@ -51,7 +47,11 @@ class StringCalculatorTest {
     fun should_fail_when_numbers_contain_a_negative_number() {
         shouldThrow<RuntimeException> { StringCalculator.add("//;\n1;-2;3;-4") }
                 .message shouldBe "negatives not allowed: [-2, -4]"
-
-
     }
+
+    @Test
+    fun should_ignore_big_numbers() {
+        assert(StringCalculator.add("2,1001")).isEqualTo(2)
+    }
+
 }

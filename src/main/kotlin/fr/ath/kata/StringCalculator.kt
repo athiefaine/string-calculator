@@ -12,6 +12,7 @@ class StringCalculator {
 
             handleNegativeNumbers(numbers)
 
+
             return compute(numbers, separators)
         }
 
@@ -23,10 +24,11 @@ class StringCalculator {
             return getNumbersBody(numbers)
                     .split(*separators.toTypedArray())
                     .map { if (it.isEmpty()) 0 else it.toInt() }
+                    .filter { it < 1000 }
         }
 
         private fun handleNegativeNumbers(numbers: Collection<Int>): Unit {
-            val negativeNumbers = numbers.filter { n -> n < 0 }
+            val negativeNumbers = numbers.filter { it < 0 }
             if (negativeNumbers.isNotEmpty()) {
                 throw RuntimeException("negatives not allowed: $negativeNumbers")
             }
