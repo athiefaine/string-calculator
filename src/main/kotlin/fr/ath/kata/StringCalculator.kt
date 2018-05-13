@@ -20,8 +20,8 @@ class StringCalculator {
             return numbers.sum()
         }
 
-        private fun getNumbers(numbers: String, separators: MutableList<String>): List<Int> {
-            return getExpressionBody(numbers)
+        private fun getNumbers(expression: String, separators: MutableList<String>): List<Int> {
+            return getExpressionBody(expression)
                     .split(*separators.toTypedArray())
                     .map { if (it.isEmpty()) 0 else it.toInt() }
                     .filter { it < NUMBER_UPPER_LIMIT }
@@ -44,9 +44,8 @@ class StringCalculator {
         }
 
         private fun getCustomSeparator(numbers: String): String {
-            val lines = getLines(numbers)
-            if (useCustomSeparator(lines)) {
-                return lines[0]
+            if (getExpressionHeader(numbers).isNotEmpty()) {
+                return getExpressionHeader(numbers)
                         .removePrefix(CUSTOM_SEPARATOR_HEADER_PREFIX)
                         .removePrefix("[")
                         .removeSuffix("]")
@@ -54,19 +53,18 @@ class StringCalculator {
             return ""
         }
 
-        private fun getExpressionBody(numbers: String): String {
-            val lines = getLines(numbers)
-            if (useCustomSeparator(lines)) {
-                lines.removeAt(0)
-            }
-            return lines.joinToString(DEFAULT_SEPARATOR)
-        }
+        private fun getExpressionHeader(expression: String) =
+                getExpressionPart(expression, { it -> useCustomSeparator(it) })
 
-        private fun getLines(numbers: String) = numbers.split("\n").toMutableList()
+        private fun getExpressionBody(expression: String) =
+                getExpressionPart(expression, { it -> useCustomSeparator(it).not() })
 
-        private fun useCustomSeparator(lines: MutableList<String>) =
-                lines[0].startsWith(CUSTOM_SEPARATOR_HEADER_PREFIX)
+        private fun getExpressionPart(expression: String, predicate: (String) -> Boolean) =
+                getLines(expression).filter(predicate).joinToString(DEFAULT_SEPARATOR)
 
+        private fun getLines(expression: String) = expression.split("\n").toMutableList()
+
+        private fun useCustomSeparator(line: String) = line.startsWith(CUSTOM_SEPARATOR_HEADER_PREFIX)
     }
 
 }
