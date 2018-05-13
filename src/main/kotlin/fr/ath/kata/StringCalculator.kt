@@ -18,8 +18,8 @@ class StringCalculator {
         private fun getNumbers(expression: String, separators: Collection<String>): List<Int> =
                 getExpressionBody(expression)
                         .split(*separators.toTypedArray())
-                        .filterNot { it.isEmpty() }
-                        .map { it.toInt() }
+                        .filterNot(String::isEmpty)
+                        .map(String::toInt)
                         .filter { it < NUMBER_UPPER_LIMIT }
 
         private fun checkForNegativeNumbers(numbers: Collection<Int>) {
@@ -33,11 +33,10 @@ class StringCalculator {
                 listOf(DEFAULT_SEPARATOR, *getCustomSeparators(expression).toTypedArray())
 
         private fun getCustomSeparators(expression: String): Collection<String> =
-                getExpressionHeader(expression)
-                        .removePrefix(CUSTOM_SEPARATOR_HEADER_PREFIX)
+                getExpressionHeader(expression).removePrefix(CUSTOM_SEPARATOR_HEADER_PREFIX)
                         .split("[")
                         .map { it.removeSuffix("]") }
-                        .filterNot { it.isEmpty() }
+                        .filterNot(String::isEmpty)
 
         private fun getExpressionHeader(expression: String) =
                 getExpressionPart(expression, { it -> containsCustomSeparator(it) })
