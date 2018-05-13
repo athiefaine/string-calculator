@@ -8,25 +8,19 @@ class StringCalculator {
 
         fun add(expression: String): Int {
             val separators = getSeparators(expression)
-
             val numbers = getNumbers(expression, separators)
-
             checkForNegativeNumbers(numbers)
-
             return compute(numbers)
         }
 
-        private fun compute(numbers: Collection<Int>): Int {
-            return numbers.sum()
-        }
+        private fun compute(numbers: Collection<Int>): Int = numbers.sum()
 
-        private fun getNumbers(expression: String, separators: Collection<String>): List<Int> {
-            return getExpressionBody(expression)
-                    .split(*separators.toTypedArray())
-                    .filterNot { it.isEmpty() }
-                    .map { it.toInt() }
-                    .filter { it < NUMBER_UPPER_LIMIT }
-        }
+        private fun getNumbers(expression: String, separators: Collection<String>): List<Int> =
+                getExpressionBody(expression)
+                        .split(*separators.toTypedArray())
+                        .filterNot { it.isEmpty() }
+                        .map { it.toInt() }
+                        .filter { it < NUMBER_UPPER_LIMIT }
 
         private fun checkForNegativeNumbers(numbers: Collection<Int>) {
             val negativeNumbers = numbers.filter { it < 0 }
@@ -38,13 +32,12 @@ class StringCalculator {
         private fun getSeparators(expression: String): Collection<String> =
                 listOf(DEFAULT_SEPARATOR, *getCustomSeparators(expression).toTypedArray())
 
-        private fun getCustomSeparators(expression: String): Collection<String> {
-            return getExpressionHeader(expression)
-                    .removePrefix(CUSTOM_SEPARATOR_HEADER_PREFIX)
-                    .split("[")
-                    .map { it.removeSuffix("]") }
-                    .filter { it.isNotEmpty() }
-        }
+        private fun getCustomSeparators(expression: String): Collection<String> =
+                getExpressionHeader(expression)
+                        .removePrefix(CUSTOM_SEPARATOR_HEADER_PREFIX)
+                        .split("[")
+                        .map { it.removeSuffix("]") }
+                        .filterNot { it.isEmpty() }
 
         private fun getExpressionHeader(expression: String) =
                 getExpressionPart(expression, { it -> containsCustomSeparator(it) })
@@ -53,11 +46,8 @@ class StringCalculator {
                 getExpressionPart(expression, { it -> containsCustomSeparator(it).not() })
 
         private fun getExpressionPart(expression: String, predicate: (String) -> Boolean) =
-                getLines(expression).filter(predicate).joinToString(DEFAULT_SEPARATOR)
-
-        private fun getLines(expression: String) = expression.split("\n").toMutableList()
+                expression.split("\n").filter(predicate).joinToString(DEFAULT_SEPARATOR)
 
         private fun containsCustomSeparator(line: String) = line.startsWith(CUSTOM_SEPARATOR_HEADER_PREFIX)
     }
-
 }
