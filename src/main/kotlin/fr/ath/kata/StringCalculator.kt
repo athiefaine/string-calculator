@@ -20,7 +20,7 @@ class StringCalculator {
             return numbers.sum()
         }
 
-        private fun getNumbers(expression: String, separators: MutableList<String>): List<Int> {
+        private fun getNumbers(expression: String, separators: Collection<String>): List<Int> {
             return getExpressionBody(expression)
                     .split(*separators.toTypedArray())
                     .map { if (it.isEmpty()) 0 else it.toInt() }
@@ -34,37 +34,29 @@ class StringCalculator {
             }
         }
 
-        private fun getSeparators(numbers: String): MutableList<String> {
-            val separators = mutableListOf(DEFAULT_SEPARATOR)
-            val customSeparator = getCustomSeparator(numbers)
-            if (customSeparator.isNotEmpty()) {
-                separators.add(customSeparator)
-            }
-            return separators
-        }
+        private fun getSeparators(expression: String): Collection<String> =
+            listOf(DEFAULT_SEPARATOR, *getCustomSeparators(expression).toTypedArray())
 
-        private fun getCustomSeparator(numbers: String): String {
-            if (getExpressionHeader(numbers).isNotEmpty()) {
-                return getExpressionHeader(numbers)
-                        .removePrefix(CUSTOM_SEPARATOR_HEADER_PREFIX)
-                        .removePrefix("[")
-                        .removeSuffix("]")
-            }
-            return ""
+        private fun getCustomSeparators(expression: String): Collection<String> {
+            return listOf(getExpressionHeader(expression)
+                    .removePrefix(CUSTOM_SEPARATOR_HEADER_PREFIX)
+                    .removePrefix("[")
+                    .removeSuffix("]"))
+                    .filter { it.isNotEmpty() }
         }
 
         private fun getExpressionHeader(expression: String) =
-                getExpressionPart(expression, { it -> useCustomSeparator(it) })
+                getExpressionPart(expression, { it -> containsCustomSeparator(it) })
 
         private fun getExpressionBody(expression: String) =
-                getExpressionPart(expression, { it -> useCustomSeparator(it).not() })
+                getExpressionPart(expression, { it -> containsCustomSeparator(it).not() })
 
         private fun getExpressionPart(expression: String, predicate: (String) -> Boolean) =
                 getLines(expression).filter(predicate).joinToString(DEFAULT_SEPARATOR)
 
         private fun getLines(expression: String) = expression.split("\n").toMutableList()
 
-        private fun useCustomSeparator(line: String) = line.startsWith(CUSTOM_SEPARATOR_HEADER_PREFIX)
+        private fun containsCustomSeparator(line: String) = line.startsWith(CUSTOM_SEPARATOR_HEADER_PREFIX)
     }
 
 }
