@@ -11,7 +11,7 @@ class StringCalculator {
 
             val numbers = getNumbers(expression, separators)
 
-            handleNegativeNumbers(numbers)
+            checkForNegativeNumbers(numbers)
 
             return compute(numbers)
         }
@@ -23,25 +23,26 @@ class StringCalculator {
         private fun getNumbers(expression: String, separators: Collection<String>): List<Int> {
             return getExpressionBody(expression)
                     .split(*separators.toTypedArray())
-                    .map { if (it.isEmpty()) 0 else it.toInt() }
+                    .filterNot { it.isEmpty() }
+                    .map { it.toInt() }
                     .filter { it < NUMBER_UPPER_LIMIT }
         }
 
-        private fun handleNegativeNumbers(numbers: Collection<Int>) {
+        private fun checkForNegativeNumbers(numbers: Collection<Int>) {
             val negativeNumbers = numbers.filter { it < 0 }
-            if (negativeNumbers.isNotEmpty()) {
+            if (negativeNumbers.any()) {
                 throw RuntimeException("negatives not allowed: $negativeNumbers")
             }
         }
 
         private fun getSeparators(expression: String): Collection<String> =
-            listOf(DEFAULT_SEPARATOR, *getCustomSeparators(expression).toTypedArray())
+                listOf(DEFAULT_SEPARATOR, *getCustomSeparators(expression).toTypedArray())
 
         private fun getCustomSeparators(expression: String): Collection<String> {
-            return listOf(getExpressionHeader(expression)
+            return getExpressionHeader(expression)
                     .removePrefix(CUSTOM_SEPARATOR_HEADER_PREFIX)
-                    .removePrefix("[")
-                    .removeSuffix("]"))
+                    .split("[")
+                    .map { it.removeSuffix("]") }
                     .filter { it.isNotEmpty() }
         }
 

@@ -59,4 +59,9 @@ class StringCalculatorTest {
         assert(StringCalculator.add("//[***]\n1***2***3")).isEqualTo(6)
     }
 
+    @Test
+    fun should_return_sum_when_given_any_amount_with_multiple_custom_separated_numbers() {
+        assert(StringCalculator.add("//[***][!!]\n1***2!!3")).isEqualTo(6)
+    }
+
 }
